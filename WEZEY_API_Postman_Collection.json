@@ -1,0 +1,1370 @@
+{
+  "info": {
+    "_postman_id": "b0cd0690-ab3b-449d-b6d0-c71f7d0bf22c",
+    "name": "WEZEY Accessibility & Social Platform API",
+    "description": "Comprehensive Postman Collection for WEZEY \u2013 The AI-Powered Accessibility & Social Platform designed specifically for blind and visually impaired users.\n\nBackend: Laravel 12 REST APIs\nHost: http://127.0.0.1:8000\nPrefix: /api/v1\nAuthentication: Laravel Sanctum Bearer Token",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication & Voice Registration",
+      "description": "Voice-guided onboarding, registration, OTP login, and user session management.",
+      "item": [
+        {
+          "name": "Check Phone Registered",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone_number\": \"+60 12-345 6789\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/check",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "check"
+              ]
+            },
+            "description": "Check if a phone number is already registered on Wezey."
+          }
+        },
+        {
+          "name": "Voice Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Sanctum Bearer Token saved: ' + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Carter\",\n  \"phone_number\": \"+60 12-345 6789\",\n  \"email\": \"john@wezey.com\",\n  \"otp_code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new user through the voice onboarding flow. Automatically sets {{token}}."
+          }
+        },
+        {
+          "name": "User Login (Phone & OTP)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.environment.set('token', jsonData.token);",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Sanctum Bearer Token saved: ' + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone_number\": \"+60 12-345 6789\",\n  \"otp_code\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Log into Wezey using phone number and OTP code. Automatically sets {{token}}."
+          }
+        },
+        {
+          "name": "Get Authenticated User (Me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Fetch current authenticated user profile and accessibility settings."
+          }
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Revoke the current Sanctum access token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. OTP Verification",
+      "description": "SMS and voice verification one-time passcode services.",
+      "item": [
+        {
+          "name": "Send OTP Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone_number\": \"+60 12-345 6789\",\n  \"purpose\": \"registration\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/send",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "otp",
+                "send"
+              ]
+            },
+            "description": "Trigger an OTP to the user's phone."
+          }
+        },
+        {
+          "name": "Verify OTP Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone_number\": \"+60 12-345 6789\",\n  \"otp_code\": \"123456\",\n  \"purpose\": \"registration\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/otp/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "otp",
+                "verify"
+              ]
+            },
+            "description": "Validate the OTP code entered or spoken by the user."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. System & Configuration",
+      "description": "App settings, languages, OpenAI status, and platform health.",
+      "item": [
+        {
+          "name": "App Configuration",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "config"
+              ]
+            },
+            "description": "Returns platform version, website URL, and active accessibility capabilities."
+          }
+        },
+        {
+          "name": "Supported Languages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/languages",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "languages"
+              ]
+            },
+            "description": "List of available app languages (English, Bahasa Melayu, Hindi, Tamil, Mandarin)."
+          }
+        },
+        {
+          "name": "OpenAI Integration Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/system/openai-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "system",
+                "openai-status"
+              ]
+            },
+            "description": "Check if an OpenAI API key is configured on the backend."
+          }
+        },
+        {
+          "name": "Save OpenAI API Key",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"api_key\": \"sk-proj-YOUR_API_KEY_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/system/openai-key",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "system",
+                "openai-key"
+              ]
+            },
+            "description": "Save or update the OpenAI API Key in backend settings."
+          }
+        },
+        {
+          "name": "System Health Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/health",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "health"
+              ]
+            },
+            "description": "General server health check endpoint."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. AI Assistant & Voice Engine",
+      "description": "Conversational AI, layman prompt wrapping, live weather, breaking news, travel durations, and scene visualization.",
+      "item": [
+        {
+          "name": "Ask Question (General AI / Layman Wrapped)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What is Wezey and how does it help visually impaired users?\",\n  \"language\": \"en\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/ask",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "ask"
+              ]
+            },
+            "description": "Ask conversational AI any question. Automatically formatted for spoken TTS output in layman terms."
+          }
+        },
+        {
+          "name": "Ask Question - Top 5 Breaking News Malaysia",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Can you tell me what are the top 5 breaking news in malaysia now. please simply and summarize the content, with layman term for easy understanding. Please just share the news directly and nothing else.\",\n  \"language\": \"en\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/ask",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "ask"
+              ]
+            },
+            "description": "Specific query template for Malaysia top 5 breaking news with layman summary."
+          }
+        },
+        {
+          "name": "Ask Question - Travel Duration (Penang to Damansara)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What is the duration from Penang to 19, jalan cempaka, SD12/B, Bandar Sri Damansara. Show several modes of travelling (by car, by bus, by walking and by flight) and its duration, and nothing else\",\n  \"language\": \"en\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/ask",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "ask"
+              ]
+            },
+            "description": "Calculate travel durations across car, flight, bus, and walking modes in layman terms."
+          }
+        },
+        {
+          "name": "Live Breaking News Feed",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ai/news?country=my",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "news"
+              ],
+              "query": [
+                {
+                  "key": "country",
+                  "value": "my"
+                }
+              ]
+            },
+            "description": "Retrieve 5 breaking news stories summarized in audio format via RSS + OpenAI."
+          }
+        },
+        {
+          "name": "Live Real-Time Weather",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ai/weather?latitude=3.1390&longitude=101.6869&city=Kuala%20Lumpur",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "weather"
+              ],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "3.1390"
+                },
+                {
+                  "key": "longitude",
+                  "value": "101.6869"
+                },
+                {
+                  "key": "city",
+                  "value": "Kuala Lumpur"
+                }
+              ]
+            },
+            "description": "Get current weather condition, temperature, humidity, and rain probability."
+          }
+        },
+        {
+          "name": "Travel Duration (Origins & Destinations)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"origin\": \"Penang\",\n  \"destination\": \"19, Jalan Cempaka, SD12/B, Bandar Sri Damansara\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/travel",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "travel"
+              ]
+            },
+            "description": "Dedicated travel duration endpoint for origin to destination."
+          }
+        },
+        {
+          "name": "AI Visualize Surroundings (Upload Photo)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD...\",\n  \"session_uuid\": \"session-viz-postman-1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/visualize",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "visualize"
+              ]
+            },
+            "description": "Analyze captured camera snapshot and return ~20-word spoken description for a blind user."
+          }
+        },
+        {
+          "name": "AI Contextual Image Q&A (Spatial & Nearby Places)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Is there any restaurant around this place?\",\n  \"session_uuid\": \"session-viz-postman-1\",\n  \"latitude\": 3.139,\n  \"longitude\": 101.6869\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/visualize/ask",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "visualize",
+                "ask"
+              ]
+            },
+            "description": "Ask questions about the captured image and surrounding geographic landmarks."
+          }
+        },
+        {
+          "name": "Speech / Language Translation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Welcome to Wezey accessibility platform\",\n  \"target_language\": \"ms\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/ai/translate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "ai",
+                "translate"
+              ]
+            },
+            "description": "Translate spoken text between English, Malay, and other supported languages."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Wezey Website Voice Navigation (www.wezey.com)",
+      "description": "API allowing blind users to navigate https://www.wezey.com via voice commands.",
+      "item": [
+        {
+          "name": "Navigate Website by Voice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target\": \"features\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/wezey-web/navigate",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "wezey-web",
+                "navigate"
+              ]
+            },
+            "description": "Navigate to 'home', 'about', 'features', or 'contact' on www.wezey.com with full audio narration."
+          }
+        },
+        {
+          "name": "Website Accessible Sitemap",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/wezey-web/sitemap",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "wezey-web",
+                "sitemap"
+              ]
+            },
+            "description": "Get full structured voice navigation hierarchy for www.wezey.com."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Social Feed & Community",
+      "description": "Accessible social feed with automatic voice descriptions, comments, likes, and photo albums.",
+      "item": [
+        {
+          "name": "Get Social Feed Posts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/feed?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "feed"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Paginated list of community posts with audio descriptions and engagement stats."
+          }
+        },
+        {
+          "name": "Get Single Post Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            },
+            "description": "Fetch details of a single post by ID including comments."
+          }
+        },
+        {
+          "name": "Search Posts (Voice / Keyword)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/search/query?query=sunset",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "search",
+                "query"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "sunset"
+                }
+              ]
+            },
+            "description": "Search community posts by voice query or text caption keywords."
+          }
+        },
+        {
+          "name": "Create New Social Post (with AI Caption)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "caption",
+                  "value": "A beautiful sunset at the beach.",
+                  "type": "text"
+                },
+                {
+                  "key": "location_name",
+                  "value": "Batu Ferringhi, Penang",
+                  "type": "text"
+                },
+                {
+                  "key": "tagged_user_ids",
+                  "value": "[2]",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "value": "",
+                  "type": "file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/posts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts"
+              ]
+            },
+            "description": "Create a new social post with photo, optional location, tagged friends, and AI caption."
+          }
+        },
+        {
+          "name": "Like / Unlike Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/posts/1/like",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "1",
+                "like"
+              ]
+            },
+            "description": "Toggle like on a post."
+          }
+        },
+        {
+          "name": "Add Comment to Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment_text\": \"This sounds like a wonderful place!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/1/comment",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "1",
+                "comment"
+              ]
+            },
+            "description": "Add a spoken or text comment to a post."
+          }
+        },
+        {
+          "name": "Report Inappropriate Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Inappropriate content\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/1/report",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "1",
+                "report"
+              ]
+            },
+            "description": "Report a post for moderation."
+          }
+        },
+        {
+          "name": "Get My Album",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/my-album",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "my-album"
+              ]
+            },
+            "description": "Fetch all posts created by the currently logged in user."
+          }
+        },
+        {
+          "name": "Get Specific User Album",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1/album",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "1",
+                "album"
+              ]
+            },
+            "description": "Fetch posts created by a specific user."
+          }
+        },
+        {
+          "name": "Search Users for Tagging",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/search?query=emma",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "emma"
+                }
+              ]
+            },
+            "description": "Search users to tag in photos."
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. User Profile & Preferences",
+      "description": "Profile details, audio preferences, and language switching.",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile"
+              ]
+            },
+            "description": "Retrieve current user profile data and statistics."
+          }
+        },
+        {
+          "name": "Update Profile Details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Carter\",\n  \"email\": \"john.updated@wezey.com\",\n  \"bio\": \"Accessible technology advocate and Wezey explorer.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/update",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile",
+                "update"
+              ]
+            },
+            "description": "Update user display name, email, or bio."
+          }
+        },
+        {
+          "name": "Switch Primary Language",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"language_code\": \"ms\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/language",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile",
+                "language"
+              ]
+            },
+            "description": "Change user's default app language (e.g. 'ms' for Bahasa Melayu, 'en' for English)."
+          }
+        },
+        {
+          "name": "Update Audio & Gesture Preferences",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"speech_rate\": 1.05,\n  \"speech_pitch\": 1.0,\n  \"speech_volume\": 1.0,\n  \"auto_read_screen\": true,\n  \"haptic_feedback\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/preferences",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profile",
+                "preferences"
+              ]
+            },
+            "description": "Update voice speed, speech rate, volume, and haptic feedback."
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Facial Biometrics & Security",
+      "description": "Biometric face registration and verification endpoints.",
+      "item": [
+        {
+          "name": "Enroll Face Biometrics",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"face_image\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/face/enroll",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face",
+                "enroll"
+              ]
+            },
+            "description": "Enroll user's facial biometric template for hands-free login."
+          }
+        },
+        {
+          "name": "Verify Face Biometrics",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"face_image\": \"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD...\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/face/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "face",
+                "verify"
+              ]
+            },
+            "description": "Verify user identity against registered biometric template."
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Notifications & Voice Alerts",
+      "description": "Real-time alerts, speech notifications, and reading status.",
+      "item": [
+        {
+          "name": "Get Notifications List",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications"
+              ]
+            },
+            "description": "Fetch user notifications with spoken audio text."
+          }
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/notifications/1/read",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "notifications",
+                "1",
+                "read"
+              ]
+            },
+            "description": "Mark a specific notification as read."
+          }
+        }
+      ]
+    }
+  ]
+}
