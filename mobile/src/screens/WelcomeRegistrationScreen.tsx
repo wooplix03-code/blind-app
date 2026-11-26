@@ -538,130 +538,124 @@ export const WelcomeRegistrationScreen: React.FC<WelcomeRegistrationProps> = ({ 
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          overflow: 'hidden',
+          overflowY: 'auto',
+          overflowX: 'hidden',
           background: 'var(--paper)',
         }}
       >
-        {/* ---- Calm Deep Ink Header Card ---- */}
+        {/* ---- Calm Deep Ink Header Card (flow container — never clips text) ---- */}
         <div
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '53%',
+            flexShrink: 0,
             background: 'linear-gradient(155deg, #16324F 0%, #1C456E 100%)',
             borderRadius: '0 0 2rem 2rem',
-            overflow: 'hidden',
-            zIndex: 0,
-          }}
-        />
-
-        {/* ---- Header ---- */}
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
+            padding: 'clamp(1.25rem, 3vh, 2.25rem) 1.5rem clamp(1.5rem, 3.5vh, 2.25rem)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '2.5rem 1.75rem 0',
+            flexDirection: 'column',
+            boxShadow: '0 10px 30px -10px rgba(22, 50, 79, 0.35)',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* ---- Header ---- */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: '11px',
+                  background: 'rgba(255,255,255,0.14)',
+                  border: '1.5px solid rgba(255,255,255,0.28)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ color: '#fff', fontFamily: "'Newsreader', Georgia, serif", fontSize: '20px', fontWeight: 600 }}>W</span>
+              </div>
+              <span style={{ fontFamily: "'Newsreader', Georgia, serif", fontSize: '1.6rem', fontWeight: 600, color: '#ffffff', letterSpacing: '-0.02em' }}>
+                Wezey
+              </span>
+            </div>
             <div
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: '11px',
+                background: 'rgba(255,255,255,0.12)',
+                borderRadius: '9999px',
+                padding: '0.3rem 0.85rem',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                color: '#DBEAFE',
+                border: '1px solid rgba(255,255,255,0.2)',
+              }}
+            >
+              Voice-First Platform
+            </div>
+          </div>
+
+          {/* ---- Hero Center — Voice Icon ---- */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingTop: 'clamp(1.25rem, 3vh, 2rem)',
+            }}
+          >
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                speechEngine.speak('Welcome to Wezey. The voice-first accessibility platform. Tap once to register. Double tap to log in.');
+              }}
+              style={{
+                width: 'clamp(74px, 11vh, 96px)',
+                height: 'clamp(74px, 11vh, 96px)',
+                borderRadius: '24px',
                 background: 'rgba(255,255,255,0.14)',
-                border: '1.5px solid rgba(255,255,255,0.28)',
+                border: '1.5px solid rgba(255,255,255,0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                color: '#ffffff',
+                cursor: 'pointer',
               }}
             >
-              <span style={{ color: '#fff', fontFamily: "'Newsreader', Georgia, serif", fontSize: '20px', fontWeight: 600 }}>W</span>
+              <Volume2 size={40} strokeWidth={1.9} />
             </div>
-            <span style={{ fontFamily: "'Newsreader', Georgia, serif", fontSize: '1.6rem', fontWeight: 600, color: '#ffffff', letterSpacing: '-0.02em' }}>
-              Wezey
-            </span>
-          </div>
-          <div
-            style={{
-              background: 'rgba(255,255,255,0.12)',
-              borderRadius: '9999px',
-              padding: '0.3rem 0.85rem',
-              fontSize: '0.72rem',
-              fontWeight: 600,
-              color: '#DBEAFE',
-              border: '1px solid rgba(255,255,255,0.2)',
-            }}
-          >
-            Voice-First Platform
-          </div>
-        </div>
 
-        {/* ---- Hero Center — Voice Icon ---- */}
-        <div
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingTop: '2.25rem',
-            paddingBottom: '1rem',
-          }}
-        >
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              speechEngine.speak('Welcome to Wezey. The voice-first accessibility platform. Tap once to register. Double tap to log in.');
-            }}
-            style={{
-              width: 96,
-              height: 96,
-              borderRadius: '26px',
-              background: 'rgba(255,255,255,0.14)',
-              border: '1.5px solid rgba(255,255,255,0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#ffffff',
-              cursor: 'pointer',
-            }}
-          >
-            <Volume2 size={44} strokeWidth={1.9} />
+            <h1
+              style={{
+                fontFamily: "'Newsreader', Georgia, serif",
+                fontSize: 'clamp(1.75rem, 4vw, 2.15rem)',
+                fontWeight: 500,
+                color: '#ffffff',
+                textAlign: 'center',
+                marginTop: 'clamp(0.85rem, 2vh, 1.25rem)',
+                letterSpacing: '-0.02em',
+                lineHeight: 1.15,
+              }}
+            >
+              Welcome to Wezey
+            </h1>
+            <p
+              style={{
+                fontSize: '0.95rem',
+                color: 'rgba(239,246,255,0.9)',
+                textAlign: 'center',
+                marginTop: '0.45rem',
+                fontWeight: 400,
+                maxWidth: '300px',
+                lineHeight: 1.45,
+              }}
+            >
+              Calm, voice-guided accessibility &amp; vision companion
+            </p>
           </div>
-
-          <h1
-            style={{
-              fontFamily: "'Newsreader', Georgia, serif",
-              fontSize: '2.15rem',
-              fontWeight: 500,
-              color: '#ffffff',
-              textAlign: 'center',
-              marginTop: '1.25rem',
-              letterSpacing: '-0.02em',
-              lineHeight: 1.15,
-            }}
-          >
-            Welcome to Wezey
-          </h1>
-          <p
-            style={{
-              fontSize: '0.95rem',
-              color: 'rgba(239,246,255,0.88)',
-              textAlign: 'center',
-              marginTop: '0.45rem',
-              fontWeight: 400,
-              maxWidth: '280px',
-            }}
-          >
-            Calm, voice-guided accessibility &amp; vision companion
-          </p>
         </div>
 
         {/* ---- Bottom Paper Actions ---- */}
